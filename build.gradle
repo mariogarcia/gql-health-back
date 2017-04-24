@@ -1,0 +1,39 @@
+buildscript {
+  repositories {
+    jcenter()
+    mavenCentral()
+  }
+  dependencies {
+    classpath 'io.ratpack:ratpack-gradle:1.4.4'
+    classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.3'
+  }
+}
+
+apply plugin: 'groovy'
+apply plugin: 'codenarc'
+apply plugin: 'io.ratpack.ratpack-groovy'
+apply plugin: 'com.github.johnrengelman.shadow'
+
+repositories {
+  mavenLocal()
+  jcenter()
+  maven {
+    url  "http://dl.bintray.com/grooviter/maven"
+  }
+}
+
+dependencies {
+  compile ratpack.dependency('guice')
+  compile ratpack.dependency('rx')
+
+  compile 'org.codehaus.groovy:groovy-all:2.4.10'
+  compile 'com.github.grooviter:gql:0.1.2-alpha-SNAPSHOT'
+
+  testCompile 'org.spockframework:spock-core:1.0-groovy-2.4'
+  testCompile 'junit:junit:4.12'
+}
+
+compileGroovy {
+  groovyOptions.configurationScript = file('src/conf/compiler.groovy')
+}
+
