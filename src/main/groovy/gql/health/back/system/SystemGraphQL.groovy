@@ -25,7 +25,7 @@ class SystemGraphQL {
    */
   GraphQLFieldDefinition getSystemServices() {
     return DSL.field('services') {
-      type Types.SYSTEMS_TYPE
+      type Types.GraphQLSystemHealth
       fetcher { DataFetchingEnvironment env ->
         return [
           os: systemService.systemOS,
