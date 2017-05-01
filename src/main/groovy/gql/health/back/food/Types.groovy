@@ -33,6 +33,15 @@ class Types {
     value 'UNIT', 2
   }
 
+  static final GraphQLEnumType GraphQLMealType = DSL.enum('MealType') {
+    description 'Meal type'
+
+    value 'BREAKFAST', 1
+    value 'LUNCH', 2
+    value 'DINNER', 3
+    value 'IN_BETWEEN', 4
+  }
+
   //    _                _     _
   //   (_)_ _  _ __ _  _| |_  | |_ _  _ _ __  ___ ___
   //   | | ' \| '_ \ || |  _| |  _| || | '_ \/ -_|_-<
@@ -50,9 +59,10 @@ class Types {
   static final GraphQLInputObjectType GraphQLMealInput = DSL.input('MealInput') {
     description 'Every meal we eat'
 
-    field 'entries', list(GraphQLMealInputEntry)
-    field 'comments', GraphQLString
-    field 'date', GraphQLDate
+    field 'description', nonNull(GraphQLString)
+    field 'type', nonNull(GraphQLMealType)
+    field 'date', nonNull(GraphQLDate)
+    field 'entries', nonNull(list(GraphQLMealInputEntry))
   }
 
   //             _             _     _

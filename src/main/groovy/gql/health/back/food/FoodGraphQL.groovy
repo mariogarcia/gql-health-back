@@ -19,9 +19,9 @@ class FoodGraphQL {
     return DSL.field('findAllMealsByDate') {
       description 'Looks for all meals of a person at a given date'
 
-      type Types.GraphQLMeal
+      type list(Types.GraphQLMeal)
       fetcher { DataFetchingEnvironment env ->
-        foodService.findLast()
+        foodService.listAll()
       }
     }
   }
