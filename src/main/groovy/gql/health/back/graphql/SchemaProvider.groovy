@@ -24,14 +24,12 @@ class SchemaProvider implements Provider<GraphQLSchema> {
   @Override
   GraphQLSchema get() {
     return schema {
-      query('Queries') {
-        description 'All available queries'
-
+      queries {
         addField graphQLSystem.systemServices
         addField foodGraphQL.findAllMealsByDate()
       }
 
-      mutation('Mutations') {
+      mutations {
         addField foodGraphQL.addMeal()
       }
     }
