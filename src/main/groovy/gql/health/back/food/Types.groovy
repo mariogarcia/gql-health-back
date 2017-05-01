@@ -17,12 +17,17 @@ class Types {
   //   \__,_|\_,_/_\_\_|_|_\__,_|_|    \__|\_, | .__/\___/__/
   //                                       |__/|_|
 
+  static final String DATE_FORMAT = 'dd/MM/yyyy'
+
   static final GraphQLScalarType GraphQLDate = DSL.scalar('Date') {
     serialize { Date date ->
-      date.format('dd/MM/yyyy')
+      date.format(DATE_FORMAT)
     }
     parseLiteral { String ddMMyyyy ->
-      Date.parse('ddMMyyyy', ddMMyyyy)
+      Date.parse(DATE_FORMAT, ddMMyyyy)
+    }
+    parseValue { String ddMMyyyy ->
+      Date.parse(DATE_FORMAT, ddMMyyyy)
     }
   }
 
