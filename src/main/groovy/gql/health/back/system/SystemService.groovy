@@ -33,4 +33,16 @@ class SystemService {
   String getSystemVersion() {
     config.version
   }
+
+  BigInteger getTotalMemory() {
+    Runtime.getRuntime().totalMemory()
+  }
+
+  BigInteger getAvailableMemory() {
+    Runtime.getRuntime().freeMemory()
+  }
+
+  BigInteger getUsedMemory() {
+    return totalMemory - availableMemory
+  }
 }

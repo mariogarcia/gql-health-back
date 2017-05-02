@@ -35,17 +35,17 @@ class Types {
   static final GraphQLEnumType GraphQLUnitType = DSL.enum('UnitType') {
     description 'Weight measurement type'
 
-    value 'GRAM', 1
-    value 'UNIT', 2
+    value 'GRAM', 'GRAM'
+    value 'UNIT', 'GRAM'
   }
 
   static final GraphQLEnumType GraphQLMealType = DSL.enum('MealType') {
     description 'Meal type'
 
-    value 'BREAKFAST', 1
-    value 'LUNCH', 2
-    value 'DINNER', 3
-    value 'IN_BETWEEN', 4
+    value 'BREAKFAST', 'BREAKFAST'
+    value 'LUNCH', 'LUNCH'
+    value 'DINNER', 'DINNER'
+    value 'IN_BETWEEN', 'IN_BETWEEN'
   }
 
   //    _                _     _
@@ -59,16 +59,19 @@ class Types {
 
     field 'description', nonNull(GraphQLString)
     field 'quantity', nonNull(GraphQLFloat)
-    field 'unitType', nonNull(GraphQLUnitType)
+    field 'type', nonNull(GraphQLUnitType)
   }
 
   static final GraphQLInputObjectType GraphQLMealInput = DSL.input('MealInput') {
     description 'Every meal we eat'
 
-    field 'description', nonNull(GraphQLString)
     field 'type', nonNull(GraphQLMealType)
     field 'date', nonNull(GraphQLDate)
     field 'entries', nonNull(list(GraphQLMealInputEntry))
+    field('comments') {
+      description 'used in case some extra comments are needed'
+      type GraphQLString
+    }
   }
 
   //             _             _     _
@@ -82,14 +85,15 @@ class Types {
 
     field 'description', GraphQLString
     field 'quantity', GraphQLFloat
-    field 'unitType', GraphQLUnitType
+    field 'type', GraphQLUnitType
   }
 
   static final GraphQLObjectType GraphQLMeal = DSL.type('Meal') {
     description 'Represents one given meal at a given time'
 
-    field 'description', GraphQLString
-    field 'entries', list(GraphQLMealEntry)
+    field 'id', GraphQLString
+    field 'comments', GraphQLString
     field 'date', GraphQLDate
+    field 'entries', list(GraphQLMealEntry)
   }
 }

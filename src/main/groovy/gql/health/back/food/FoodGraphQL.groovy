@@ -3,45 +3,79 @@ package gql.health.back.food
 import gql.DSL
 import graphql.schema.DataFetchingEnvironment
 import graphql.schema.GraphQLFieldDefinition
-import groovy.transform.CompileDynamic
 
 import javax.inject.Inject
 
 /**
- * @since 0.1.3
+ * Defines all possible queries and mutations over the Food/Meal domain
+ *
+ * @since 0.1.0
  */
 class FoodGraphQL {
 
+  /**
+   * Service accessing the underlying datastore
+   *
+   * @since 0.1.0
+   */
   @Inject
   FoodService foodService
 
+  /**
+   * Defines how to get all meals of a given date
+   *
+   * @return an instance of {@link GraphQLFieldDefinition}
+   * @since 0.1.0
+   */
   GraphQLFieldDefinition findAllMealsByDate() {
-    return DSL.field('findAllMealsByDate') {
-      description 'Looks for all meals of a person at a given date'
+    def GraphQLMealType = DSL.type('Meal'){
+      field 'id', GraphQLString
+      field 'comments', GraphQLString
+      field 'date', Types.GraphQLDate
+      field('entries') {
+        type list(Types.GraphQLMealEntry)
+        fetcher { DataFetchingEnvironment env ->
+          Map<String,?> meal = env.source as Map<String,?>
+          foodService.findAllEntriesByMealId(meal.ID as UUID)
+        }
+      }
+    }
+    DSL.field('findAllMealsByDate') {
+      description 'looks for all meals of a person at a given date'
 
-      type list(Types.GraphQLMeal)
+      type list(GraphQLMealType)
+      argument 'date', Types.GraphQLDate
       fetcher { DataFetchingEnvironment env ->
-        foodService.listAll()
+        foodService.findAllByDate(env.arguments.date as Date)
       }
     }
   }
 
-  @CompileDynamic
+  /**
+   * Defines how to add a new meal
+   *
+   * @return an instance of {@link GraphQLFieldDefinition}
+   * @since 0.1.0
+   */
   GraphQLFieldDefinition addMeal() {
-    return DSL.field('addMeal') {
-      description 'adds a new meal'
-
-      type Types.GraphQLMeal
-      fetcher this.&addMealToDatastore
-      argument('meal') {
-        type Types.GraphQLMealInput
+    def GraphQLMealType = DSL.type('Meal'){
+      field 'id', GraphQLString
+      field 'comments', GraphQLString
+      field 'date', Types.GraphQLDate
+      field('entries') {
+        type list(Types.GraphQLMealEntry)
+        fetcher { DataFetchingEnvironment env ->
+          foodService.findAllEntriesByMealId(env.arguments.id as UUID)
+        }
       }
     }
-  }
-
-  private Map addMealToDatastore(DataFetchingEnvironment env) {
-    Map meal = env.arguments.meal as Map
-
-    return foodService.addNewMeal(meal)
+    DSL.field('addMeal') {
+      description 'adds a new meal'
+      type GraphQLMealType
+      argument 'meal', Types.GraphQLMealInput
+      fetcher { DataFetchingEnvironment env ->
+        foodService.addNewMeal(env.arguments.meal as Map)
+      }
+    }
   }
 }

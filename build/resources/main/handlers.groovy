@@ -1,3 +1,5 @@
+import ratpack.server.ServerConfigBuilder
+
 import static ratpack.groovy.Groovy.ratpack
 
 import gql.health.back.graphql.Utils
@@ -9,12 +11,11 @@ import gql.health.back.graphql.Handler
  */
 ratpack {
 
-  serverConfig {
-    config ->
-      config
-        .port(8080)
-        .yaml("gql-health.yml")
-        .require("", AppConfig)
+  serverConfig { ServerConfigBuilder config ->
+    config
+      .port(8080)
+      .yaml("gql-health.yml")
+      .require("", AppConfig)
   }
 
   handlers {
