@@ -1,6 +1,7 @@
 package gql.health.back.food
 
 import gql.DSL
+import graphql.language.StringValue
 import graphql.schema.GraphQLEnumType
 import graphql.schema.GraphQLInputObjectType
 import graphql.schema.GraphQLObjectType
@@ -23,8 +24,8 @@ class Types {
     serialize { Date date ->
       date.format(DATE_FORMAT)
     }
-    parseLiteral { String ddMMyyyy ->
-      Date.parse(DATE_FORMAT, ddMMyyyy)
+    parseLiteral { StringValue ddMMyyyy ->
+      Date.parse(DATE_FORMAT, ddMMyyyy.value)
     }
     parseValue { String ddMMyyyy ->
       Date.parse(DATE_FORMAT, ddMMyyyy)
