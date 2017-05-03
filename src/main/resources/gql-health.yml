@@ -2,7 +2,7 @@ version: 0.1.0
 
 dataSource:
   driverClassName: org.h2.Driver
-  uri: jdbc:h2:mem:testy
+  uri: jdbc:h2:mem:test;DATABASE_TO_UPPER=false
   username: sa
   password:
   flywaySchemas: public,gql

@@ -1,5 +1,6 @@
 package gql.health.back.food
 
+import gql.health.back.common.ID
 import groovy.sql.Sql
 import groovy.util.logging.Slf4j
 
@@ -23,35 +24,35 @@ class FoodService {
    * @since 0.1.0
    */
   Map addNewMeal(Map meal) {
-    List<Map> entries = meal.entries as List<Map>
-    UUID mealId = UUID.randomUUID()
-
     log.info("Adding new meal: $meal")
+
+    def mealToSave = meal + [id: ID.generateID()]
+    def entries = meal.entries.collect { Map entry -> entry + [id: ID.generateID()] } as List<Map>
 
     sql.withTransaction {
       sql
-        .executeInsert(/INSERT INTO gql.meal (id, comments, "type", "date") VALUES (?, ?, ?, ?)/,
-        mealId,
-        meal.comments,
-        meal.type,
-        meal.date)
+        .executeInsert(
+          /INSERT INTO gql.meal (id, comments, "type", "date") VALUES (?, ?, ?, ?)/,
+          mealToSave.id,
+          mealToSave.comments,
+          mealToSave.type,
+          mealToSave.date)
         .findResult { List<Object> ids ->
-        ids.find() as Long
-      }
+          ids.find() as Long
+        }
 
       entries.each { Map entry ->
-        UUID entryId = UUID.randomUUID()
         sql.executeInsert(
-          /INSERT INTO gql.meal_entry (id, meal_id, description, quantity, "type") VALUES (?, ?, ?, ?, ?)/,
-          entryId,
-          mealId,
+          /INSERT INTO gql.meal_entry (meal_id, id, description, quantity, "type") VALUES (?, ?, ?, ?, ?)/,
+          mealToSave.id,
+          entry.id,
           entry.description,
           entry.quantity,
           entry.type)
       }
     }
 
-    return meal + [id: mealId]
+    return mealToSave
   }
 
   /**

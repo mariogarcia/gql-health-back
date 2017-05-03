@@ -3,6 +3,7 @@ package gql.health.back.food
 import gql.DSL
 import graphql.language.StringValue
 import graphql.schema.GraphQLEnumType
+import graphql.schema.GraphQLFieldDefinition
 import graphql.schema.GraphQLInputObjectType
 import graphql.schema.GraphQLObjectType
 import graphql.schema.GraphQLScalarType
@@ -83,8 +84,29 @@ class Types {
   static final GraphQLObjectType GraphQLMealEntry = DSL.type('MealEntry') {
     description 'every dish or ingredient in a given meal'
 
+    field 'id', GraphQLString
     field 'description', GraphQLString
     field 'quantity', GraphQLFloat
     field 'type', GraphQLUnitType
+  }
+
+  static final GraphQLFieldDefinition MEAL_ID = DSL.field('id') {
+    description 'Meal identifier'
+    type GraphQLString
+  }
+
+  static final GraphQLFieldDefinition MEAL_COMMENTS = DSL.field('comments') {
+    description "Meal comments like: 'I was very tired'... or 'I needed to take some sugar because...'"
+    type GraphQLString
+  }
+
+  static final GraphQLFieldDefinition MEAL_DATE = DSL.field('date') {
+    description "When the meal took place. It must have the format '$DATE_FORMAT'"
+    type GraphQLDate
+  }
+
+  static final GraphQLFieldDefinition MEAL_TYPE = DSL.field('type') {
+    description 'The type of meal: it was a breakfast, lunch...'
+    type GraphQLMealType
   }
 }
