@@ -87,13 +87,4 @@ class Types {
     field 'quantity', GraphQLFloat
     field 'type', GraphQLUnitType
   }
-
-  static final GraphQLObjectType GraphQLMeal = DSL.type('Meal') {
-    description 'Represents one given meal at a given time'
-
-    field 'id', GraphQLString
-    field 'comments', GraphQLString
-    field 'date', GraphQLDate
-    field 'entries', list(GraphQLMealEntry)
-  }
 }
