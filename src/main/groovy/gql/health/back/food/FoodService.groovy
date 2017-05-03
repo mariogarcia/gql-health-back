@@ -1,14 +1,14 @@
 package gql.health.back.food
 
-import groovy.sql.GroovyRowResult
 import groovy.sql.Sql
 import groovy.util.logging.Slf4j
 
 import javax.inject.Inject
-import java.sql.Connection
 
 /**
- * @since 0.1.3
+ * Service accessing meal related information from the persistence layer
+ *
+ * @since 0.1.0
  */
 @Slf4j
 class FoodService {
@@ -18,6 +18,8 @@ class FoodService {
   /**
    * Adds a new meal and its entries
    *
+   * @param meal meal information to be persisted
+   * @return the persisted meal with the persistence id
    * @since 0.1.0
    */
   Map addNewMeal(Map meal) {
@@ -56,12 +58,21 @@ class FoodService {
    * Retrieves all meals added in the given day
    *
    * @param date an instance of {@link Date}
+   * @return a list of meals introduced that day
    * @since 0.1.0
    */
   List<Map> findAllByDate(Date date) {
     return sql.rows(/SELECT * FROM gql.meal where "date" = ?/, date) as List<Map>
   }
 
+  /**
+   * Returns a list of all entries belonging to the meal whose id has been passed
+   * as parameter
+   *
+   * @param uuid meal id
+   * @return a list of meal entries belonging to the specified meal
+   * @since 0.1.0
+   */
   List<Map> findAllEntriesByMealId(UUID uuid) {
     return sql.rows(/SELECT * FROM gql.meal_entry where meal_id = ?/, uuid) as List<Map>
   }
