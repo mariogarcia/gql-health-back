@@ -29,6 +29,7 @@ class SchemaProvider implements Provider<GraphQLSchema> {
 
       mutations {
         addField graphQLFood.addMeal()
+        addField graphQLFood.deleteMeal()
       }
     }
   }

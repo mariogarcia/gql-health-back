@@ -33,6 +33,18 @@ class Types {
     }
   }
 
+  static final GraphQLScalarType GraphQLUUID = DSL.scalar('UUID') {
+    serialize { UUID uuid ->
+      uuid.toString()
+    }
+    parseLiteral { StringValue uuid ->
+      UUID.fromString(uuid.value)
+    }
+    parseValue { String uuid ->
+      UUID.fromString(uuid)
+    }
+  }
+
   static final GraphQLEnumType GraphQLUnitType = DSL.enum('UnitType') {
     description 'Weight measurement type'
 
@@ -84,7 +96,7 @@ class Types {
   static final GraphQLObjectType GraphQLMealEntry = DSL.type('MealEntry') {
     description 'every dish or ingredient in a given meal'
 
-    field 'id', GraphQLString
+    field 'id', GraphQLUUID
     field 'description', GraphQLString
     field 'quantity', GraphQLFloat
     field 'type', GraphQLUnitType
@@ -92,7 +104,7 @@ class Types {
 
   static final GraphQLFieldDefinition MEAL_ID = DSL.field('id') {
     description 'Meal identifier'
-    type GraphQLString
+    type GraphQLUUID
   }
 
   static final GraphQLFieldDefinition MEAL_COMMENTS = DSL.field('comments') {

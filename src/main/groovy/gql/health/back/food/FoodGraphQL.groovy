@@ -59,6 +59,24 @@ class FoodGraphQL {
   }
 
   /**
+   * Deletes a given meal by its id
+   *
+   * @return an instance of {@link GraphQLFieldDefinition}
+   * @since 0.1.0
+   */
+  GraphQLFieldDefinition deleteMeal() {
+    DSL.field('deleteMeal') {
+      description 'deletes a given meal by its id. Returns the id of the removed meal'
+
+      type GraphQLMeal
+      argument 'id', Types.GraphQLUUID
+      fetcher { DataFetchingEnvironment env ->
+        foodService.deleteMealById(env.arguments.id as UUID)
+      }
+    }
+  }
+
+  /**
    * This type has been declared here as an instance field and not in {@link Types} as an
    * static field because it needs to resolve a given field ('entries') using the {@link FoodService} instance.
    *

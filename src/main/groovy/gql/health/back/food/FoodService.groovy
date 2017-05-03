@@ -1,6 +1,7 @@
 package gql.health.back.food
 
 import gql.health.back.common.ID
+import groovy.sql.BatchingStatementWrapper
 import groovy.sql.Sql
 import groovy.util.logging.Slf4j
 
@@ -63,7 +64,7 @@ class FoodService {
    * @since 0.1.0
    */
   List<Map> findAllByDate(Date date) {
-    return sql.rows(/SELECT * FROM gql.meal where "date" = ?/, date) as List<Map>
+    sql.rows(/SELECT * FROM gql.meal where "date" = ?/, date) as List<Map>
   }
 
   /**
@@ -75,6 +76,37 @@ class FoodService {
    * @since 0.1.0
    */
   List<Map> findAllEntriesByMealId(UUID uuid) {
-    return sql.rows(/SELECT * FROM gql.meal_entry where meal_id = ?/, uuid) as List<Map>
+    sql.rows(/SELECT * FROM gql.meal_entry where meal_id = ?/, uuid) as List<Map>
+  }
+
+  /**
+   * Deletes a given meal by its id
+   *
+   * @param uuid the id of the meal we would like to delete
+   * @return the {@link UUID} of the deleted meal if everything went ok
+   * @since 0.1.0
+   */
+  Map deleteMealById(UUID uuid) {
+    Map recordToDelete = findMealById(uuid)
+
+    if (recordToDelete) {
+      sql.withTransaction {
+        sql.executeUpdate(/DELETE FROM gql.meal_entry where meal_id = ?/, uuid)
+        sql.executeUpdate(/DELETE FROM gql.meal where id = ?/, uuid)
+      }
+    }
+
+    return recordToDelete
+  }
+
+  /**
+   * Finds a given meal by its id
+   *
+   * @param uuid the unique meal id
+   * @return a map containing top meal information
+   * @since 0.1.0
+   */
+  Map findMealById(UUID uuid) {
+    sql.firstRow(/SELECT * FROM gql.meal where id = ?/, uuid)
   }
 }
