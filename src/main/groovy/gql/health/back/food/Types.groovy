@@ -1,14 +1,15 @@
 package gql.health.back.food
 
 import gql.DSL
-import graphql.language.StringValue
+import gql.health.back.graphql.CommonTypes
 import graphql.schema.GraphQLEnumType
 import graphql.schema.GraphQLFieldDefinition
 import graphql.schema.GraphQLInputObjectType
 import graphql.schema.GraphQLObjectType
-import graphql.schema.GraphQLScalarType
 
 /**
+ * Food related GraphQL types
+ *
  * @since 0.1.0
  */
 class Types {
@@ -18,32 +19,6 @@ class Types {
   //   / _` | || \ \ / | | / _` | '_| |  _| || | '_ \/ -_|_-<
   //   \__,_|\_,_/_\_\_|_|_\__,_|_|    \__|\_, | .__/\___/__/
   //                                       |__/|_|
-
-  static final String DATE_FORMAT = 'dd/MM/yyyy'
-
-  static final GraphQLScalarType GraphQLDate = DSL.scalar('Date') {
-    serialize { Date date ->
-      date.format(DATE_FORMAT)
-    }
-    parseLiteral { StringValue ddMMyyyy ->
-      Date.parse(DATE_FORMAT, ddMMyyyy.value)
-    }
-    parseValue { String ddMMyyyy ->
-      Date.parse(DATE_FORMAT, ddMMyyyy)
-    }
-  }
-
-  static final GraphQLScalarType GraphQLUUID = DSL.scalar('UUID') {
-    serialize { UUID uuid ->
-      uuid.toString()
-    }
-    parseLiteral { StringValue uuid ->
-      UUID.fromString(uuid.value)
-    }
-    parseValue { String uuid ->
-      UUID.fromString(uuid)
-    }
-  }
 
   static final GraphQLEnumType GraphQLUnitType = DSL.enum('UnitType') {
     description 'Weight measurement type'
@@ -79,7 +54,7 @@ class Types {
     description 'Every meal we eat'
 
     field 'type', nonNull(GraphQLMealType)
-    field 'date', nonNull(GraphQLDate)
+    field 'date', nonNull(CommonTypes.GraphQLDate)
     field 'entries', nonNull(list(GraphQLMealInputEntry))
     field('comments') {
       description 'used in case some extra comments are needed'
@@ -96,7 +71,7 @@ class Types {
   static final GraphQLObjectType GraphQLMealEntry = DSL.type('MealEntry') {
     description 'every dish or ingredient in a given meal'
 
-    field 'id', GraphQLUUID
+    field 'id', CommonTypes.GraphQLUUID
     field 'description', GraphQLString
     field 'quantity', GraphQLFloat
     field 'type', GraphQLUnitType
@@ -104,7 +79,7 @@ class Types {
 
   static final GraphQLFieldDefinition MEAL_ID = DSL.field('id') {
     description 'Meal identifier'
-    type GraphQLUUID
+    type CommonTypes.GraphQLUUID
   }
 
   static final GraphQLFieldDefinition MEAL_COMMENTS = DSL.field('comments') {
@@ -113,8 +88,8 @@ class Types {
   }
 
   static final GraphQLFieldDefinition MEAL_DATE = DSL.field('date') {
-    description "When the meal took place. It must have the format '$DATE_FORMAT'"
-    type GraphQLDate
+    description "When the meal took place. It must have the format '${CommonTypes.DATE_FORMAT}'"
+    type CommonTypes.GraphQLDate
   }
 
   static final GraphQLFieldDefinition MEAL_TYPE = DSL.field('type') {

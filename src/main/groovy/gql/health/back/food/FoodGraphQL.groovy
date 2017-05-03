@@ -1,6 +1,7 @@
 package gql.health.back.food
 
 import gql.DSL
+import gql.health.back.graphql.CommonTypes
 import graphql.schema.DataFetchingEnvironment
 import graphql.schema.GraphQLFieldDefinition
 import graphql.schema.GraphQLObjectType
@@ -33,7 +34,7 @@ class FoodGraphQL {
       description 'looks for all meals of a person at a given date'
 
       type list(GraphQLMeal)
-      argument 'date', Types.GraphQLDate
+      argument 'date', CommonTypes.GraphQLDate
       fetcher { DataFetchingEnvironment env ->
         foodService.findAllByDate(env.arguments.date as Date)
       }
@@ -69,7 +70,7 @@ class FoodGraphQL {
       description 'deletes a given meal by its id. Returns the id of the removed meal'
 
       type GraphQLMeal
-      argument 'id', Types.GraphQLUUID
+      argument 'id', CommonTypes.GraphQLUUID
       fetcher { DataFetchingEnvironment env ->
         foodService.deleteMealById(env.arguments.id as UUID)
       }
