@@ -70,7 +70,9 @@ class FoodGraphQL {
       description 'deletes a given meal by its id. Returns the id of the removed meal'
 
       type GraphQLMeal
-      argument 'id', CommonTypes.GraphQLUUID
+      argument('id', GraphQLString) {
+        description ''
+      }
       fetcher { DataFetchingEnvironment env ->
         foodService.deleteMealById(env.arguments.id as UUID)
       }

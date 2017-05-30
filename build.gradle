@@ -16,6 +16,7 @@ apply plugin: 'com.github.johnrengelman.shadow'
 
 repositories {
   mavenLocal()
+  mavenCentral()
   jcenter()
   maven {
     url  "http://dl.bintray.com/grooviter/maven"
@@ -28,7 +29,7 @@ dependencies {
   compile ratpack.dependency('hikari')
 
   compile 'org.codehaus.groovy:groovy-all:2.4.10'
-  compile 'com.github.grooviter:gql:0.1.5-alpha-SNAPSHOT'
+  compile 'com.github.grooviter:gql:0.1.6-alpha-SNAPSHOT'
   compile "org.slf4j:slf4j-simple:1.7.12"
 
   compile 'com.h2database:h2:1.4.195'
@@ -42,3 +43,8 @@ compileGroovy {
   groovyOptions.configurationScript = file('src/conf/compiler.groovy')
 }
 
+codenarc {
+    configFile = new File(projectDir, 'src/conf/codenarc.groovy')
+    ignoreFailures = false
+    reportFormat = 'html'
+}
